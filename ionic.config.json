@@ -1,0 +1,7 @@
+{
+  "name": "ecoImpulso",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
