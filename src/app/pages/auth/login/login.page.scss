@@ -1,0 +1,43 @@
+.logo{
+    max-width: 100px;
+}
+
+ion-content{
+    --background: linear-gradient(0deg, rgba(157, 255, 133,0.3), rgba(157, 255, 133,0.3)), url('../../../../assets/img/ecoimpulso.jpeg') no-repeat center center / cover;
+}
+
+.container{
+    height: 100%;
+    width: 100dvw;
+
+    display: grid;
+    place-content: center;
+}
+
+.form-container{
+    //background-color: var(--color-white);
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    padding: 40px 25px;
+    border-radius: 25px;
+    width: 95vw;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.login-form{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.is-invalid {
+    --highlight-color-invalid: red;  /* Color when invalid */
+}
+
+.input-background{
+    --background: var(--color-white);
+    --padding-start: 10px;
+    --padding-end: 10px;
+    --border-radius: 5px;
+}

@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-back-button slot="start" [defaultHref]="['/auth/login']" color="light"></ion-back-button>
+    <ion-title>Registro de cuenta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="container">
+    <div class="form-container">
+      <h1 class="ion-text-center">Registrar cuenta</h1>
+      <form class="login-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+        <ion-input class="input-background" label="Correo Electrónico" labelPlacement="stacked" type="text" fill="solid" placeholder="Ejemplo@email.com"
+        formControlName="email" [class.is-invalid]="
+        (registerForm.get('email')?.invalid && submitted) || 
+        (registerForm.get('email')?.invalid && registerForm.get('email')?.touched)"></ion-input>
+        
+        @if ((registerForm.get('email')?.invalid && submitted) || registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <span class="danger">Ingrese un email válido</span>
+        }
+        
+        <ion-input class="input-background" label="Contraseña" id="password" labelPlacement="stacked" type="password" fill="solid" placeholder="Contraseña"
+          formControlName="password" 
+          [class.is-invalid]="
+          (registerForm.get('password')?.invalid && submitted) || 
+          registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+
+
+        @if ((registerForm.get('password')?.invalid && submitted) || registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+            <span class="danger">Ingrese una contraseña</span>
+        }
+
+        <ion-input class="input-background" label="Repetir Contraseña" id="repeat-password" labelPlacement="stacked" type="password" fill="solid"
+        formControlName="repeatPassword" 
+        [class.is-invalid]="
+        (registerForm.get('repeatPassword')?.invalid && submitted) || 
+        registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched">
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+
+
+      @if ((registerForm.get('repeatPassword')?.invalid && submitted) 
+            || registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched
+            || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && registerForm.get('repeatPassword')?.touched)
+            || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && submitted)) {
+          <span class="danger">Las contraseñas no son iguales</span>
+      }
+
+        <ion-button color="primary" type="submit">Registrar</ion-button>
+      </form>
+    </div>
+  </div>
+
+</ion-content>

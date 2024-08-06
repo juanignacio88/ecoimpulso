@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-button class="mx-10" size="small" slot="start" [routerLink] = "['/auth/login']" routerDirection="root" color="light">
+      <ion-icon name="log-out" slot="icon-only"></ion-icon>
+    </ion-button>
+    <ion-title>Educación Ambiental</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">Reportajes</ion-label>
+        <ion-button slot="end" (click)="readItems()" [disabled]="reloadDisabled"><ion-icon name="refresh-circle" slot="icon-only"></ion-icon></ion-button>
+      </ion-item>
+      @if (reportajes.length == 0) {
+        <ion-item color="none" lines="none"><ion-label>No hay reportajes</ion-label></ion-item>
+      }@else{
+        <ion-accordion-group>
+          @for (reportaje of reportajes; track $index) {
+            <ion-accordion>
+              <ion-item slot="header" color="primary">
+                <ion-label>{{reportaje.title}}</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content">
+                <span>fecha: {{reportaje.date.getDate() + "/" + (reportaje.date.getMonth()+1) + "/" + reportaje.date.getFullYear()}}</span>
+                <hr>
+                {{reportaje.content}}
+              </div>
+            </ion-accordion>
+          }
+        </ion-accordion-group>
+      }
+      
+    </ion-list>
+  </div>
+
+  
+  
+
+</ion-content>

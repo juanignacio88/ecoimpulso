@@ -21,14 +21,24 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "@capacitor-community/sqlite": "^6.0.1",
     "@capacitor/app": "6.0.0",
     "@capacitor/core": "6.1.1",
+    "@capacitor/device": "^6.0.0",
+    "@capacitor/geolocation": "^6.0.0",
     "@capacitor/haptics": "6.0.0",
     "@capacitor/keyboard": "6.0.1",
+    "@capacitor/preferences": "^6.0.1",
+    "@capacitor/splash-screen": "^6.0.1",
     "@capacitor/status-bar": "6.0.0",
     "@ionic/angular": "^8.0.0",
+    "@ionic/storage-angular": "^4.0.0",
+    "cordova-sqlite-storage": "^6.1.0",
+    "ecoImpulso": "file:",
     "ionicons": "^7.0.0",
+    "jeep-sqlite": "^2.7.2",
     "rxjs": "~7.8.0",
+    "sql.js": "^1.11.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
@@ -59,6 +69,9 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.4.0"
+  },
+  "browser": {
+    "crypto": false
   },
   "description": "An Ionic project"
 }
