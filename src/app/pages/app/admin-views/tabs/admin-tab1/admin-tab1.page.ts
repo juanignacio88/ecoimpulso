@@ -13,10 +13,14 @@ export class AdminTab1Page implements OnInit {
   reportajes:IReportaje[] = [];
 
   constructor(private storage:LocalStorageService, private alertController: AlertController) { 
-    this.readItems();
+    
   }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter(){
+    this.readItems();
   }
 
   async alertForm(reportaje?:IReportaje){

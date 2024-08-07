@@ -1,0 +1,11 @@
+/* Set the size of the div element that contains the map */
+#map {
+    height: 200px; /* The height is 400 pixels */
+    width: 100%; /* The width is the width of the web page */
+}
+
+ion-item:has(div#map) {
+    --padding-end: 0px;
+    --padding-start: 0px;
+    --inner-padding-end: 0px;
+}

@@ -78,7 +78,11 @@ export class GoogleMapsService {
 
   removeMarker() {
     this.marker.setMap(null); //ELIMINA EL MARCADOR DEL MAPA
-
+    this.resetMapView(); //REINICIA POSICION Y ZOOM DEL MAPA
+  }
+  
+  //REINICIA POSICION Y ZOOM DEL MAPA
+  resetMapView(){
     this.map.setCenter(this.GPSMarker.getPosition()); //CENTRA EL MAPA CON LAS COORDENADAS ORIGINALES DEL GPS
     this.map.setZoom(this.mapDefaultZoom); // REINICIA EL ZOOM ORIGINAL
   }

@@ -4,11 +4,10 @@
     width: 100%; /* The width is the width of the web page */
 }
 
-.map-item {
+ion-item:has(div#map) {
     --padding-end: 0px;
     --padding-start: 0px;
     --inner-padding-end: 0px;
-    // here other custom CSS from documentation
 }
 
 .ios ion-searchbar, .ios ion-item-divider ion-label{
