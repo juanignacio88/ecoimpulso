@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { IPuntoReciclaje } from 'src/app/interfaces/db.interfaces';
-import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { GoogleMapsService } from 'src/app/services/map/google-maps.service';
 
 @Component({
@@ -14,21 +15,39 @@ export class ClientTab2Page implements OnInit {
   puntos:IPuntoReciclaje[] = [];
   cantidadResultados!: number;
 
-  constructor(private storage:LocalStorageService, private gmapService:GoogleMapsService) { }
+  constructor(
+    private gmapService:GoogleMapsService,
+    private alertCtrl: AlertController,
+    private firebase:FirebaseService
+  ) { }
 
   ngOnInit() {
   }
 
   async ionViewDidEnter(){
-    this.map = document.getElementById('map') as HTMLElement; //OBTIENE EL MAPA DEL DOM
-    await this.gmapService.loadMap(this.map); //ENVIA EL MAPA AL SERVICIO DE GOOGLE MAPS
-    this.readPuntos(); //CARGA LOS PUNTOS DE RECICLAJE A LA VISTA
-    // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
-    setTimeout(()=> this.calculateDistances(),2000);
+    
+    if(await this.gmapService.requestLocationPermissions()){
+      this.map = document.getElementById('map') as HTMLElement; //OBTIENE EL MAPA DEL DOM
+      await this.gmapService.loadMap(this.map); //ENVIA EL MAPA AL SERVICIO DE GOOGLE MAPS
+      this.readPuntos(); //CARGA LOS PUNTOS DE RECICLAJE A LA VISTA
+      // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
+      setTimeout(()=> this.calculateDistances(),2000);
+    }else{
+      const alert = await this.alertCtrl.create({
+        header:'Error de GPS',
+        message:'No se ha podido obtener la ubicación GPS, recuerda encender la ubicación y otorgar los permisos a la aplicación',
+        buttons: ['Ok']
+      })
+      await alert.present();
+    }
+
   }
 
   readPuntos(){
-    this.storage.getPuntosReciclaje().then(p => this.puntos = p); //BUSCA LOS PUNTOS DE RECICLAJE DEL STORAGE
+    this.firebase.getPuntosReciclaje().subscribe((p) => {
+      this.puntos = p;//BUSCA LOS PUNTOS DE RECICLAJE DE FIREBASE
+      setTimeout(()=> this.calculateDistances(),2000);
+    });
   }
 
   addMarkerToMap(punto:IPuntoReciclaje){

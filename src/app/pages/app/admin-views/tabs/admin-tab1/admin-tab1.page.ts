@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { IReportaje } from 'src/app/interfaces/db.interfaces';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
 
 @Component({
@@ -12,7 +13,10 @@ export class AdminTab1Page implements OnInit {
 
   reportajes:IReportaje[] = [];
 
-  constructor(private storage:LocalStorageService, private alertController: AlertController) { 
+  constructor(
+    private storage:LocalStorageService, 
+    private alertController: AlertController,
+    private firebase: FirebaseService) { 
     
   }
 
@@ -45,7 +49,7 @@ export class AdminTab1Page implements OnInit {
       buttons: [{
         text:'Añadir',
         handler: (alertData)=>{
-          alertData.id = reportaje?.id || undefined;
+          alertData.rid = reportaje?.rid || '';
           alertData.date = reportaje?.date || undefined;
           this.handleSubmit(alertData)
         }
@@ -60,22 +64,20 @@ export class AdminTab1Page implements OnInit {
   }
 
   async handleSubmit(reportaje:IReportaje){
-    if(reportaje.id != undefined) {
+    if(reportaje.rid != '') {
       //MANEJA EL UPDATE
-      this.storage.updateReportaje(reportaje).then(()=>{
-        this.readItems();
-      });
+      this.firebase.updateReportaje(reportaje.rid as string,reportaje);
     }else{
       //MANEJA EL CREATE
       reportaje.date = new Date();
-      this.storage.addReportaje(reportaje).then(()=>{
-        this.readItems();
-      });
+      this.firebase.addReportaje(reportaje);
     }
   }
 
   readItems(){
-    this.storage.getReportajes().then(r => this.reportajes = r);
+    this.firebase.getReportajes().subscribe((reportajes)=>{
+      this.reportajes = reportajes;
+    });
   }
 
   async confirmAlert(reportaje:IReportaje){
@@ -101,9 +103,7 @@ export class AdminTab1Page implements OnInit {
   }
 
   deleteItem(reportaje:IReportaje){
-    this.storage.deleteReportajeById(reportaje.id).then(()=>{
-      this.readItems();
-    })
+    this.firebase.deleteReportajeById(reportaje.rid as string);
   }
 
 }

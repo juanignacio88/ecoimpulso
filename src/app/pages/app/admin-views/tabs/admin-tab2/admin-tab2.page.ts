@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { IPuntoReciclaje } from 'src/app/interfaces/db.interfaces';
-import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { GoogleMapsService } from 'src/app/services/map/google-maps.service';
 
 @Component({
@@ -13,7 +14,11 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
   puntos:IPuntoReciclaje[] = [];
   searchPlaces:IPuntoReciclaje[] = [];
 
-  constructor(private storage:LocalStorageService, private gmapService:GoogleMapsService) { 
+  constructor(
+    private gmapService:GoogleMapsService,
+    private alertCtrl: AlertController,
+    private firebase:FirebaseService
+  ) { 
 
   }
 
@@ -26,33 +31,37 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
   //DESPUES DE CARGAR LA VISTA COMPLETA SE CARGA EL MAPA, 
   //ESTO ES PARA EVITAR ERROR AL INTENTAR OBTENER EL DIV#MAP ANTES DE QUE EXISTA EN EL HTML
   async ionViewDidEnter(){
-    this.map = document.getElementById('map') as HTMLElement; //OBTIENE EL MAPA DEL DOM
-    await this.gmapService.loadMap(this.map); //ENVIA EL MAPA AL SERVICIO DE GOOGLE MAPS
-    this.readPuntos(); //CARGA LOS PUNTOS DE RECICLAJE A LA VISTA
-    // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
-    setTimeout(()=> this.calculateDistances(),2000);
+    if(await this.gmapService.requestLocationPermissions()){
+      this.map = document.getElementById('map') as HTMLElement; //OBTIENE EL MAPA DEL DOM
+      await this.gmapService.loadMap(this.map); //ENVIA EL MAPA AL SERVICIO DE GOOGLE MAPS
+      this.readPuntos(); //CARGA LOS PUNTOS DE RECICLAJE A LA VISTA
+      // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
+      setTimeout(()=> this.calculateDistances(),2000);
+    }else{
+      const alert = await this.alertCtrl.create({
+        header:'Error de GPS',
+        message:'No se ha podido obtener la ubicación GPS, recuerda encender la ubicación y otorgar los permisos a la aplicación',
+        buttons: ['Ok']
+      })
+      await alert.present();
+    }
   }
 
   readPuntos(){
-    this.storage.getPuntosReciclaje().then(p => this.puntos = p); //BUSCA LOS PUNTOS DE RECICLAJE DEL STORAGE
+    this.firebase.getPuntosReciclaje().subscribe((p) => {
+      this.puntos = p;//BUSCA LOS PUNTOS DE RECICLAJE DE FIREBASE
+      setTimeout(()=> this.calculateDistances(),2000);
+    });
   }
 
   createPunto(punto:IPuntoReciclaje){
-    this.storage.addPuntoReciclaje(punto).then(()=>{
-      this.readPuntos(); //BUSCA LOS PUNTOS DE RECICLAJE DEL STORAGE PARA ACTUALIZAR LA VISTA
-      // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
-      setTimeout(()=> this.calculateDistances(),2000);
-    });
+    this.firebase.addPuntoReciclaje(punto);
     this.searchPlaces = []; //ELIMINA LAS SUGERENCIAS DE BUSQUEDA
   }
 
   deletePunto(punto:IPuntoReciclaje){
     this.gmapService.removeMarker(); //ELIMINA EL MARCADOR DEL MAPA Y REINICIA LA POSICION DEL MAPA
-    this.storage.deletePuntoReciclajeById(punto.id).then(()=>{
-      this.readPuntos(); // ACTUALIZA LOS PUNTOS
-      // CALCULA LAS DISTANCIAS, SE AÑADE SET-TIMEOUT PARA MANEJAR LA EJECUCION Y ASINCRONIA
-      setTimeout(()=> this.calculateDistances(),2000);
-    });
+    this.firebase.deletePuntoReciclajeById(punto.pid as string);
   }
 
   addMarkerToMap(punto:IPuntoReciclaje){
@@ -79,6 +88,10 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
       }
     }
     this.puntos.sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0)); //ORDENA LOS PUNTOS POR DISTANCIA DE MENOR A MAYOR
+  }
+
+  resetMapView(){
+    this.gmapService.resetMapView();
   }
 
 }

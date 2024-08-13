@@ -55,29 +55,35 @@
         <h2>Puntos de reciclaje</h2>
       </ion-label>
     </ion-item-divider>
-    <div style="max-height: 200px; overflow-y: scroll;">
-      @if (puntos.length > 0) {
-        @for (punto of puntos; track $index) {
-          <ion-item button>
-            <ion-icon name="leaf" slot="start" color="primary"></ion-icon>
-            <ion-label (click)="addMarkerToMap(punto)">
-              {{punto.title}} | {{punto.distance ? (punto.distance < 10 ? punto.distance + ' km' : 'Más de 10km') : 'Calculando...'}}
-              <p>
-                <ion-text>
-                  {{punto.address}}
-                </ion-text>
-              </p>
-            </ion-label>
-            <ion-button slot="end" (click)="deletePunto(punto)">
-              <ion-icon slot="icon-only" name="close-circle"></ion-icon>
-            </ion-button>
-          </ion-item>
-        }
-      }@else {
-        <ion-item>
-          <ion-text>No hay puntos de reciclaje</ion-text>
-        </ion-item>
-      }
-    </div>
+    @if (puntos.length > 0) {
+      <ion-item button color="primary" (click)="resetMapView()">
+        <ion-label class="ion-text-center">
+          Centrar vista del mapa
+        </ion-label>
+      </ion-item>
+      <div style="max-height: 200px; overflow-y: scroll;">
+          @for (punto of puntos; track $index) {
+            <ion-item button>
+              <ion-icon name="leaf" slot="start" color="primary"></ion-icon>
+              <ion-label (click)="addMarkerToMap(punto)">
+                {{punto.title}} | {{punto.distance ? (punto.distance < 10 ? punto.distance + ' km' : 'Más de 10km') : 'Calculando...'}}
+                <p>
+                  <ion-text>
+                    {{punto.address}}
+                  </ion-text>
+                </p>
+              </ion-label>
+              <ion-button slot="end" (click)="deletePunto(punto)">
+                <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+              </ion-button>
+            </ion-item>
+          }
+      </div>
+    }@else {
+      <ion-item>
+        <ion-text>No hay puntos de reciclaje</ion-text>
+      </ion-item>
+    }
+
   </ion-list>
 </ion-content>

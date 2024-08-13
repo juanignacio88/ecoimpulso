@@ -20,18 +20,4 @@ export class AppComponent {
 
     
   }
-  /*
-  async initApp(){
-    this.platform.ready()
-    .then(async ()=>{
-      const info = await Device.getInfo()
-
-      this.isWeb = info.platform == "web"; //ERROR
-
-      this.database.init();
-      this.database.dbReady.subscribe( load =>{
-        this.load = load;
-      });
-    })
-  }*/
 }

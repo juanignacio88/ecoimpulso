@@ -2,7 +2,7 @@
   <div class="container">
     <div class="form-container">
       <h1 class="ion-text-center">Iniciar Sesión</h1>
-      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
 
         <ion-input class="input-background" label="Correo Electrónico" labelPlacement="stacked" type="text" fill="solid" placeholder="Ejemplo@email.com"
         formControlName="email" [class.is-invalid]="

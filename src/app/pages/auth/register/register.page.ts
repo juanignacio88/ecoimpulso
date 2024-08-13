@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, NavController } from '@ionic/angular';
+import { FirebaseError } from 'firebase/app';
 import { IUsuario } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
 
 @Component({
@@ -30,17 +32,29 @@ export class RegisterPage implements OnInit {
   constructor(
     private storage:LocalStorageService, //OPERACIONES CRUD DE LA DB
     private alertController: AlertController, //MUESTRA LAS ALERTAS
-    private navController: NavController) { } //PERMITE LA NAVEGACION
+    private navController: NavController,//PERMITE LA NAVEGACION
+    private authService: AuthService) { } 
 
   ngOnInit() {}
 
   //ALERTA EN CASO DE QUE EL CORREO YA EXISTA
-  async presentAlert() {
+  async emailAlert() {
     const alert = await this.alertController.create({
       header: "ERROR",
       message: "Ya existe un usuario con este email",
       buttons: ['Ok'],
     });
+    await alert.present();
+  }
+
+    //ALERTA PARA NOTIFICAR ERRORES
+  async passwordAlert() {
+    const alert = await this.alertController.create({
+      header: "ERROR",
+      message: "La contraseña es muy debil, mínimo 6 caracteres",
+      buttons: ['Ok'],
+    });
+
     await alert.present();
   }
 
@@ -54,24 +68,19 @@ export class RegisterPage implements OnInit {
       //OBTIENE LA CONTRASEÑA DEL FORMULARIO Y LO GUARDA EN NUEVA VARIABLE
       let password = this.registerForm.get("password")?.value as string;
       //CREAMOS EL NUEVO OBJETO CON LOS DATOS DEL FORMULARIO Y ROL POR DEFECTO 'CLIENT'
-      let newUser:IUsuario = {
-        email: email,
-        password: password,
-        role: "client"
-      }
 
-      //BUSCA TODOS LOS USUARIOS EN LA DB
-      this.storage.getUsuarios().then((usuarios)=>{
-        //FILTRA BUSCA SI UN USUARIO YA EXISTE POR EMAIL
-        let u = usuarios.find(u => u.email.toLowerCase() === email.toLowerCase());
-        //COMPARA LOS CORREOS DEL USUARIO ENCONTRADO Y EL CORREO INGRESADO
-        if(u?.email.toLowerCase() != email.toLowerCase()){
-          //SI EL CORREO NO EXISTE ENTONCES REGISTRA EL USUARIO
-          this.storage.addUsuario(newUser);
-          this.navController.navigateBack('/auth/login'); //DESPUES DEL REGISTRO REDIRIGE AL LOGIN
-        }else{
-          //SI EL USUARIO EXISTE ENTONCES MUESTRA UNA ALERTA
-          this.presentAlert();
+      this.authService.register(email,password,'client')
+      .then(r=>{
+        this.navController.navigateRoot('auth/login');
+      })
+      .catch((e:FirebaseError)=>{
+        switch (e.code){
+          case 'auth/email-already-in-use':
+            this.emailAlert();
+            break;
+          case 'auth/weak-password':
+            this.passwordAlert();
+            break;
         }
       })
     }

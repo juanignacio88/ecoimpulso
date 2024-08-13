@@ -25,6 +25,11 @@
       </ion-label>
     </ion-item-divider>
     @if (puntos.length > 0) {
+      <ion-item button color="primary" (click)="resetMapView()">
+        <ion-label class="ion-text-center">
+          Centrar vista del mapa
+        </ion-label>
+      </ion-item>
       <div style="max-height: 200px; overflow-y: scroll;">
           <p class="mx-10">Mostando {{cantidadResultados ? cantidadResultados : '... '}} resultados</p>
           @for (punto of puntos; track $index) {
@@ -41,11 +46,6 @@
             </ion-item>
           }
       </div>
-      <ion-item button color="primary" (click)="resetMapView()">
-        <ion-label class="ion-text-center">
-          Centrar vista del mapa
-        </ion-label>
-      </ion-item>
     }@else {
       <ion-item>
         <ion-text>No hay puntos de reciclaje</ion-text>

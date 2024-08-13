@@ -1,14 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController, NavController } from '@ionic/angular';
+import { FirebaseError } from 'firebase/app';
 import { IUsuario } from 'src/app/interfaces/db.interfaces';
-import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
-
-interface IMsg{
-  header: string,
-  subtitle?: string,
-  message: string
-}
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -31,20 +26,15 @@ export class LoginPage implements OnInit {
     ])
   });
 
-  //ARRAY PARA GUARDAR LOS USUARIOS Y VALIDAR LOGIN
-  private users!: IUsuario[];
-
   constructor(
     private navController: NavController, //PERMITE LA NAVEGACION
     private alertController: AlertController, //MUESTRA LAS ALERTAS
-    private storage:LocalStorageService) { //OPERACIONES CRUD DE LA DB
+    private authService:AuthService) { 
   }
 
   ngOnInit() {
-    this.storage.logOut();
+    this.authService.logout();
   }
-
-  
 
   //ALERTA PARA NOTIFICAR ERRORES
   async loginAlert(msg: any) {
@@ -57,11 +47,8 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-
-  onSubmit() : void{
+  login() {
     this.submitted = true;
-
-    //SOLO INGRESA SI EL FORMULARIO ES VALIDO
     if(this.loginForm.valid){
 
       //VALOR DEL CORREO EN NUEVA VARIABLE
@@ -69,48 +56,33 @@ export class LoginPage implements OnInit {
       //VALOR DE LA CONTRASEÑA EN NUEVA VARIABLE
       let password = this.loginForm.get("password")?.value as string;
 
-      //OBTIENE LOS USUARIOS DE LA DB
-      this.storage.getUsuarios().then(u=>{
-        this.users = u;
-        //RECORRE LOS USUARIOS
-        let user = this.users.find(u => {
-          //SI ENCUENTRA UN USUARIO POR EMAIL ENTONCES LO RETORNA
-          if(u.email.toLowerCase() == email) return u;
-          //EN CASO DE NO ENCONTRAR NINGUNO RETORNA 'UNDEFINED'
-          return undefined;
-        })
-        //SI EL USUARIO ES DISTINTO DE 'UNDEFINED'
-        if (user != undefined){
-          //SI LAS CONTRASEÑAS SON CORRECTAS
-          if (user.password === password){
-            //AÑADE EL USUARIO ACTIVO AL STORAGE
-            this.storage.setUsuarioActivo(user);
-            //INICIAMOS SESIÓN
-            this.navigate(user);
-          }else{
-            //EN CASO DE CONTRASEÑA INCORRECTA SE MUESTRA MENSAJE
-            let msg: IMsg = {
-              header: "Login invalido",
-              message: "Contraseña incorrecta"
-            }
-            this.loginAlert(msg);
-          }
-        }else{
-          //EN CASO DE QUE EL CORREO NO EXISTA SE MUESTRA MENSAJE
-          let msg: IMsg = {
-            header: "Login invalido",
-            message: "El usuario no existe"
-          }
-          this.loginAlert(msg);
+      this.authService.login(email, password)
+      .then((user:IUsuario) => {
+        this.navigate(user.role);
+      })
+      .catch((error: FirebaseError) => {
+        switch (error.code) {
+          case 'auth/too-many-requests':
+            this.loginAlert({
+              header:'Bloqueo temporal',
+              message:'Demaciados intentos fallidos, el usuario ha sido bloqueado temporalmente'
+            });
+            break;
+          case 'auth/invalid-credential':
+            this.loginAlert({
+              header:'Error de login',
+              message:'Correo o contraseña incorrecto'
+            });
+            break;
         }
       });
     }
   }
 
   //REDIRIGE AL USUARIO A DISTINTAS PARTES DE LA APP SEGUN SU ROL
-  navigate(user: IUsuario){
-    if (user.role === "admin") this.navController.navigateRoot('admin');
-    if (user.role === "client") this.navController.navigateRoot('client');
+  navigate(role: string){
+    if (role === "admin") this.navController.navigateRoot('admin');
+    if (role === "client") this.navController.navigateRoot('client');
   }
 
 }

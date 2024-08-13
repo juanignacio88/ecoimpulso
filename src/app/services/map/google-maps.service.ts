@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { IPuntoReciclaje } from 'src/app/interfaces/db.interfaces';
 import { mapStyle } from 'src/app/services/map/map-style';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,21 @@ export class GoogleMapsService {
 
   constructor(private zone:NgZone) { }
 
+  async requestLocationPermissions(): Promise<boolean>{
+    // Check if the location permission is granted
+    const permission = await Geolocation.checkPermissions();
+
+    if (permission.location === 'denied') {
+      // Request permission if it was denied
+      const permissionRequest = await Geolocation.requestPermissions();
+      
+      if (permissionRequest.location !== 'granted') {
+        console.error('Location permission not granted');
+        return false;
+      }
+    }
+    return true;
+  }
 
   //AQUI INICIAN LAS FUNCIONES DE GOOGLE MAPS
   async loadMap(mapContainer:HTMLElement) {
@@ -56,6 +72,7 @@ export class GoogleMapsService {
       console.error('Error getting location', error); //PARA DEBUF EN CASO DE QUE LA GEOLOCALIZACION NO FUNCIONE
     }
     return this.GPSMarker;
+    
   }
 
   getMarker(){
@@ -77,7 +94,7 @@ export class GoogleMapsService {
   }
 
   removeMarker() {
-    this.marker.setMap(null); //ELIMINA EL MARCADOR DEL MAPA
+    if(this.marker) this.marker.setMap(null); //ELIMINA EL MARCADOR DEL MAPA
     this.resetMapView(); //REINICIA POSICION Y ZOOM DEL MAPA
   }
   
