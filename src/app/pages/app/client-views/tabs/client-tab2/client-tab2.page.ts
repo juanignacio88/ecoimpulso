@@ -70,7 +70,7 @@ export class ClientTab2Page implements OnInit {
   }
 
   resetMapView(){
-    this.gmapService.resetMapView();
+    this.gmapService.removeMarker();
   }
 
 }

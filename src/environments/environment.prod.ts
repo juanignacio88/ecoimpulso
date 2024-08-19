@@ -1,11 +1,11 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: "AIzaSyB5rjzBc2eZ-28WZmWN_skeOYLzgVb5HEo",
-    authDomain: "ecoimpulso-7dba3.firebaseapp.com",
-    projectId: "ecoimpulso-7dba3",
-    storageBucket: "ecoimpulso-7dba3.appspot.com",
-    messagingSenderId: "692809982079",
-    appId: "1:692809982079:web:181cf002283cf0b56f5f4a"
+    apiKey: "AIzaSyAMGgvwIz98HGKbOWDHaB9wYhhbNw8kbFU",
+    authDomain: "ecoimpulso-cd45e.firebaseapp.com",
+    projectId: "ecoimpulso-cd45e",
+    storageBucket: "ecoimpulso-cd45e.appspot.com",
+    messagingSenderId: "740337305416",
+    appId: "1:740337305416:web:60974139d81214e5a6557d"
   }
 };

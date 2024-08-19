@@ -91,7 +91,7 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
   }
 
   resetMapView(){
-    this.gmapService.resetMapView();
+    this.gmapService.removeMarker();
   }
 
 }
