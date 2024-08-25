@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Observable, timestamp } from 'rxjs';
-import { IFirebasePuntoReciclaje, IPuntoReciclaje, IReportaje } from 'src/app/interfaces/db.interfaces';
+import { map, Observable} from 'rxjs';
+import { IFirebasePuntoReciclaje, IProducto, IPuntoReciclaje, IReportaje } from 'src/app/interfaces/db.interfaces';
 import { Timestamp } from 'firebase/firestore';
 
 @Injectable({
@@ -10,10 +10,12 @@ import { Timestamp } from 'firebase/firestore';
 export class FirebaseService {
 
   private reportajes$!: Observable<IReportaje[]>;
+  private productos$!: Observable<IProducto[]>;
   private puntosReciclaje$!: Observable<IFirebasePuntoReciclaje[]>;
   private reportajesCollection = this.firestore.collection<IReportaje>('reportajes');
+  private productosCollection = this.firestore.collection<IProducto>('productos');
   private puntosReciclajeCollection = this.firestore.collection<IFirebasePuntoReciclaje>('puntos_reciclaje');
-
+ 
   constructor(private firestore: AngularFirestore) {}
 
   getReportajes(): Observable<IReportaje[]> {
@@ -75,4 +77,32 @@ export class FirebaseService {
     return this.puntosReciclajeCollection.doc(id).delete();
   }
 
+
+  getProductos(): Observable<IProducto[]> {
+    //OBTENEMOS LOS PUNTOS DE RECICLAJE Y LO MAPEAMOS AL OBSERVABLE
+    return this.productos$ = this.productosCollection.valueChanges();
+  }
+  addProducto(producto:IProducto): Promise<void>{
+    // AÑADIMOS UN NUEVO ELEMENTO A LA COLECCION Y GENERAMOS EL ID AUTOMATICO
+    return this.productosCollection.add(producto)
+      .then(docRef => {
+        // ACTUALIZAMOS EL ITEM AÑADIENDO EL ID A LOS CAMPOS
+        const updatedProducto = {
+          ...producto,
+          pid: docRef.id //
+        };
+
+        // ACTUALIZAMOS EL ELEMENTO AÑADIENDO EL ID
+        return docRef.update(updatedProducto);
+      })
+      .catch(error => {
+        console.error("Error adding document: ", error);
+      });
+  }
+  updateProducto(id: string, updatedData: Partial<IProducto>): Promise<void> {
+    return this.productosCollection.doc(id).update(updatedData);
+  }
+  deleteProductoById(id:string): Promise<void> {
+    return this.productosCollection.doc(id).delete();
+  }
 }

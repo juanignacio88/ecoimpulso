@@ -29,8 +29,8 @@ export interface IPuntoReciclaje{
 }
 
 export interface IProducto{
-  pid?: number,
+  pid?: string,
   title: string,
   description: string,
-  value: number,
+  price: number,
 }

@@ -15,7 +15,7 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
     private storage:LocalStorageService
-  ) { }
+  ) {}
 
   async register(email: string, password: string, role: string) {
     const credential = await this.afAuth.createUserWithEmailAndPassword(email, password);
@@ -23,7 +23,8 @@ export class AuthService {
     if (uid) {
       return this.firestore.doc(`usuarios/${uid}`).set({
         uid,
-        role
+        role,
+        email
       });
     }
   }

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { IReportaje } from 'src/app/interfaces/db.interfaces';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
-import { LocalStorageService } from 'src/app/services/localStorage/local-storage.service';
 
 @Component({
   selector: 'app-admin-tab1',
@@ -14,7 +13,6 @@ export class AdminTab1Page implements OnInit {
   reportajes:IReportaje[] = [];
 
   constructor(
-    private storage:LocalStorageService, 
     private alertController: AlertController,
     private firebase: FirebaseService) { 
     

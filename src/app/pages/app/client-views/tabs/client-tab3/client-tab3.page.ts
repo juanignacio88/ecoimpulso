@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IProducto } from 'src/app/interfaces/db.interfaces';
+import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
   selector: 'app-client-tab3',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClientTab3Page implements OnInit {
 
-  constructor() { }
+  productos: IProducto[] = [];
+  constructor(private firebase:FirebaseService) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter(){
+    this.readItems();
+  }
+
+  readItems(){
+    this.firebase.getProductos().subscribe((p)=>{
+      this.productos = p;
+    });
   }
 
 }
