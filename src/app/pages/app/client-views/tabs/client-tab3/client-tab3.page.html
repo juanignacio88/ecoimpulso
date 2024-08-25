@@ -12,8 +12,9 @@
   @if(productos.length > 0){
     <ion-grid [fixed]="true">
       <ion-row>
-        <ion-col size="6" *ngFor="let producto of productos">
+        <ion-col class="ion-no-padding" size="6" *ngFor="let producto of productos">
           <ion-card>
+            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
             <ion-card-header>
               <ion-card-title>
                 {{producto.title}}

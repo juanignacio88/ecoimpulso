@@ -28,7 +28,7 @@ export class AdminTab3Page implements OnInit {
 
   async alertForm(producto?:IProducto){
     const alert = await this.alertController.create({
-      header: "Reportaje",
+      header: "Producto",
       inputs: [{
           type: 'text',
           name: 'title',

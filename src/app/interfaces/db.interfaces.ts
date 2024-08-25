@@ -33,4 +33,5 @@ export interface IProducto{
   title: string,
   description: string,
   price: number,
+  imageUrl?: string;
 }
