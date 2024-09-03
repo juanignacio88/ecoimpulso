@@ -10,7 +10,7 @@
 <ion-content [fullscreen]="true">
 
   <ion-fab slot="fixed" horizontal="end" vertical="bottom">
-    <ion-fab-button (click)="alertForm()">
+    <ion-fab-button (click)="presentProductForm()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -27,7 +27,7 @@
         </ion-item>
   
         <ion-item-options side="start">
-          <ion-item-option (click)="alertForm(producto)"><ion-icon name="create"></ion-icon></ion-item-option>
+          <ion-item-option (click)="presentProductForm(producto)"><ion-icon name="create"></ion-icon></ion-item-option>
           <ion-item-option color="danger" (click)="confirmAlert(producto)"><ion-icon name="close"></ion-icon></ion-item-option>
         </ion-item-options>
       </ion-item-sliding>

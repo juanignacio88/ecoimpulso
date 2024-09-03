@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { map, Observable} from 'rxjs';
+import { finalize, lastValueFrom, map, Observable} from 'rxjs';
 import { IFirebasePuntoReciclaje, IProducto, IPuntoReciclaje, IReportaje } from 'src/app/interfaces/db.interfaces';
 import { Timestamp } from 'firebase/firestore';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -17,7 +17,8 @@ export class FirebaseService {
   private productosCollection = this.firestore.collection<IProducto>('productos');
   private puntosReciclajeCollection = this.firestore.collection<IFirebasePuntoReciclaje>('puntos_reciclaje');
  
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore,
+    private storage: AngularFireStorage) {}
 
   getReportajes(): Observable<IReportaje[]> {
     return this.reportajes$ = this.reportajesCollection.valueChanges().pipe(
@@ -78,32 +79,80 @@ export class FirebaseService {
     return this.puntosReciclajeCollection.doc(id).delete();
   }
 
-
   getProductos(): Observable<IProducto[]> {
     //OBTENEMOS LOS PUNTOS DE RECICLAJE Y LO MAPEAMOS AL OBSERVABLE
     return this.productos$ = this.productosCollection.valueChanges();
   }
-  addProducto(producto:IProducto): Promise<void>{
-    // AÑADIMOS UN NUEVO ELEMENTO A LA COLECCION Y GENERAMOS EL ID AUTOMATICO
-    return this.productosCollection.add(producto)
-      .then(docRef => {
-        // ACTUALIZAMOS EL ITEM AÑADIENDO EL ID A LOS CAMPOS
-        const updatedProducto = {
-          ...producto,
-          pid: docRef.id //
-        };
+  // Método para subir la imagen y obtener la URL
+  private async uploadImage(file: File, productId: string): Promise<string> {
+    const filePath = `productos/${productId}`;  // Usar el ID del producto como nombre de archivo
+    const fileRef = this.storage.ref(filePath);
+    const uploadTask = this.storage.upload(filePath, file);
 
-        // ACTUALIZAMOS EL ELEMENTO AÑADIENDO EL ID
-        return docRef.update(updatedProducto);
-      })
-      .catch(error => {
-        console.error("Error adding document: ", error);
-      });
+    // Esperar a que la imagen se suba completamente y obtener la URL
+    await lastValueFrom(uploadTask.snapshotChanges().pipe(
+      finalize(() => lastValueFrom(fileRef.getDownloadURL()))
+    ));
+
+    // Obtener la URL de descarga
+    return await lastValueFrom(fileRef.getDownloadURL());
   }
-  updateProducto(id: string, updatedData: Partial<IProducto>): Promise<void> {
-    return this.productosCollection.doc(id).update(updatedData);
+
+  // Método para añadir o actualizar el producto
+  async addOrUpdateProducto(producto: IProducto, imageFile?: File): Promise<void> {
+    try {
+      let productId = producto.pid;
+      let imageUrl: string | null = producto.imageUrl || null;
+
+      if (!productId) {
+        // Si no hay ID, es un nuevo producto
+        const productRef = await this.firestore.collection('productos').add({});
+        productId = productRef.id;
+      }
+
+      if (imageFile) {
+        // Subir la nueva imagen usando el ID del producto como nombre de archivo y obtener la URL
+        imageUrl = await this.uploadImage(imageFile, productId);
+      }
+
+      // Actualizar el documento del producto con todos los datos y la URL de la imagen
+      const productoConId = {
+        ...producto,
+        pid: productId,
+        imageUrl: imageUrl
+      };
+
+      await this.firestore.collection('productos').doc(productId).set(productoConId);
+    } catch (error) {
+      console.error('Error al añadir o actualizar el producto:', error);
+      throw error;
+    }
   }
-  deleteProductoById(id:string): Promise<void> {
-    return this.productosCollection.doc(id).delete();
+
+  // Método para eliminar el producto por ID y su imagen asociada
+  async deleteProductoById(id: string): Promise<void> {
+    try {
+      // Obtener el documento del producto
+      const productDoc = await lastValueFrom(this.productosCollection.doc(id).get());
+
+      if (productDoc.exists) {
+        const productData = productDoc.data();
+        const imageUrl = productData?.imageUrl;
+
+        // Si existe una imagen asociada, eliminarla de Firebase Storage
+        if (imageUrl) {
+          const storageRef = this.storage.refFromURL(imageUrl);
+          await lastValueFrom(storageRef.delete());
+        }
+
+        // Eliminar el documento del producto en Firestore
+        await this.productosCollection.doc(id).delete();
+      } else {
+        console.error('Producto no encontrado en Firestore.');
+      }
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      throw error;
+    }
   }
 }

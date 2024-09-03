@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { ProductFormComponent } from 'src/app/components/product-form/product-form.component';
 import { IProducto, IUsuario } from 'src/app/interfaces/db.interfaces';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
@@ -10,7 +11,7 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 })
 export class AdminTab3Page implements OnInit {
   public productos:IProducto[] = [];
-  constructor(private alertController: AlertController,private firebase: FirebaseService) { }
+  constructor(private alertController: AlertController,private firebase: FirebaseService,private modalController: ModalController) { }
 
   ngOnInit() {
 
@@ -24,57 +25,6 @@ export class AdminTab3Page implements OnInit {
     this.firebase.getProductos().subscribe((p)=>{
       this.productos = p;
     });
-  }
-
-  async alertForm(producto?:IProducto){
-    const alert = await this.alertController.create({
-      header: "Producto",
-      inputs: [{
-          type: 'text',
-          name: 'title',
-          placeholder: 'Nombre producto',
-          value: producto?.title || ''
-        },
-        {
-          type: 'number',
-          name: 'price',
-          placeholder: 'Precio',
-          value: producto?.price || null
-        },
-        {
-          type: 'textarea',
-          name: 'description',
-          placeholder: 'Descripcion (max 150)',
-          value: producto?.description || '',
-          attributes: {
-            maxlength: 150,
-          },
-        },
-      ],
-      buttons: [{
-        text:'Añadir',
-        handler: (alertData)=>{
-          alertData.pid = producto?.pid || '';
-          this.handleSubmit(alertData)
-        }
-      },
-      {
-        text:'Cancelar',
-        role:'cancel'
-      }],
-    });
-
-    await alert.present();
-  }
-
-  async handleSubmit(producto:IProducto){
-    if(producto.pid != '') {
-      //MANEJA EL UPDATE
-      this.firebase.updateProducto(producto.pid as string,producto);
-    }else{
-      //MANEJA EL CREATE
-      this.firebase.addProducto(producto);
-    }
   }
 
   async confirmAlert(producto:IProducto){
@@ -102,5 +52,15 @@ export class AdminTab3Page implements OnInit {
   deleteItem(producto:IProducto){
     this.firebase.deleteProductoById(producto.pid as string);
   }
+
+
+  async presentProductForm(producto?: IProducto) {
+    const modal = await this.modalController.create({
+      component: ProductFormComponent,
+      componentProps: { producto: producto || {} }
+    });
+    return await modal.present();
+  }
+  
 
 }

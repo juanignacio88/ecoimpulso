@@ -14,15 +14,16 @@
       <ion-row>
         <ion-col class="ion-no-padding" size="6" *ngFor="let producto of productos">
           <ion-card>
-            <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+            <img alt="Silhouette of mountains" [src]="producto.imageUrl || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
             <ion-card-header>
               <ion-card-title>
                 {{producto.title}}
               </ion-card-title>
             </ion-card-header>
             <ion-card-content>
-              <p>{{producto.price}}</p>
+              <p>${{producto.price}}</p>
               <p>{{producto.description}}</p>
+              <ion-button>Carrito</ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>
