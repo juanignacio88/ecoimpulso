@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { ReportFormComponent } from 'src/app/components/report-form/report-form.component';
 import { IReportaje } from 'src/app/interfaces/db.interfaces';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
@@ -14,6 +15,7 @@ export class AdminTab1Page implements OnInit {
 
   constructor(
     private alertController: AlertController,
+    private modalController: ModalController,
     private firebase: FirebaseService) { 
     
   }
@@ -23,53 +25,6 @@ export class AdminTab1Page implements OnInit {
 
   ionViewWillEnter(){
     this.readItems();
-  }
-
-  async alertForm(reportaje?:IReportaje){
-    const alert = await this.alertController.create({
-      header: "Reportaje",
-      inputs: [{
-          type: 'text',
-          name: 'title',
-          placeholder: 'Titulo',
-          value: reportaje?.title || ''
-        },
-        {
-          type: 'textarea',
-          name: 'content',
-          placeholder: 'Contenido (max 150)',
-          value: reportaje?.content || '',
-          attributes: {
-            maxlength: 150,
-          },
-        },
-      ],
-      buttons: [{
-        text:'Añadir',
-        handler: (alertData)=>{
-          alertData.rid = reportaje?.rid || '';
-          alertData.date = reportaje?.date || undefined;
-          this.handleSubmit(alertData)
-        }
-      },
-      {
-        text:'Cancelar',
-        role:'cancel'
-      }],
-    });
-
-    await alert.present();
-  }
-
-  async handleSubmit(reportaje:IReportaje){
-    if(reportaje.rid != '') {
-      //MANEJA EL UPDATE
-      this.firebase.updateReportaje(reportaje.rid as string,reportaje);
-    }else{
-      //MANEJA EL CREATE
-      reportaje.date = new Date();
-      this.firebase.addReportaje(reportaje);
-    }
   }
 
   readItems(){
@@ -98,6 +53,14 @@ export class AdminTab1Page implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async presentReportajeForm(reportaje?: IReportaje) {
+    const modal = await this.modalController.create({
+      component: ReportFormComponent,
+      componentProps: { reportaje: reportaje || {} }
+    });
+    return await modal.present();
   }
 
   deleteItem(reportaje:IReportaje){

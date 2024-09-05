@@ -16,3 +16,12 @@ ion-list {
     background: transparent;
     padding: 0 5px;
 }
+
+img{
+    height: 100px;
+    display: block;
+    object-position: center center;
+    object-fit: contain;
+    margin: auto;
+    margin-top: 10px;
+}

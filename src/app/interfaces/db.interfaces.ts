@@ -7,8 +7,9 @@ export interface IUsuario{
 export interface IReportaje{
   rid?: string,
   title: string,
-  date: Date,
-  content: string
+  content: string,
+  link: string,
+  imageUrl?: string;
 }
 
 export interface IFirebasePuntoReciclaje{

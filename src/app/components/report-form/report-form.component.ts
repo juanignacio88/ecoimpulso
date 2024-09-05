@@ -1,18 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { IProducto } from 'src/app/interfaces/db.interfaces';
+import { IReportaje } from 'src/app/interfaces/db.interfaces';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss'],
+  selector: 'app-report-form',
+  templateUrl: './report-form.component.html',
+  styleUrls: ['./report-form.component.scss'],
 })
-export class ProductFormComponent {
-  @Input() producto: IProducto = {
+export class ReportFormComponent {
+  @Input() reportaje: IReportaje = {
     title: '',
-    description: '',
-    price: 0,
+    content: '',
+    link: '',
     imageUrl: ''  // Inicializar la propiedad imageUrl
   };
   imageFile!: File;
@@ -33,10 +33,10 @@ export class ProductFormComponent {
   async onSubmit() {
     try {
       // Si no se ha seleccionado una nueva imagen, se mantendrá la URL de la imagen existente
-      await this.firebase.addOrUpdateProducto(this.producto, this.imageFile);
+      await this.firebase.addOrUpdateReportaje(this.reportaje, this.imageFile);
       this.dismiss();
     } catch (error) {
-      console.error('Error al guardar el producto:', error);
+      console.error('Error al guardar el reportaje:', error);
     }
   }
 }

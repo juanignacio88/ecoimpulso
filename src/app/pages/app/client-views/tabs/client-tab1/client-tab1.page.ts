@@ -24,6 +24,7 @@ export class ClientTab1Page implements OnInit {
     this.reloadDisabled = true;
 
     this.firebase.getReportajes().subscribe((reportajes)=>{
+      console.log(reportajes);
       this.reportajes = reportajes;
     });
 

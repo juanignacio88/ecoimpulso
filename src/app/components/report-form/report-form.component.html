@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Reportaje</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label position="floating">Titulo del Reportaje</ion-label>
+      <ion-input type="text" [(ngModel)]="reportaje.title" name="title" required></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-textarea label="Contenido" labelPlacement="stacked" [(ngModel)]="reportaje.content" name="content" required></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Link de referencia</ion-label>
+      <ion-input type="text" [(ngModel)]="reportaje.link" name="link" required></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label>Imagen </ion-label>
+      <input type="file" (change)="onFileSelected($event)">
+    </ion-item>
+  
+    <!-- Mostrar la imagen anterior para referencia (opcional) -->
+    <div *ngIf="reportaje.imageUrl">
+      <p>Imagen actual:</p>
+      <img [src]="reportaje.imageUrl" alt="Imagen del Producto" width="100">
+    </div>
+  
+    <ion-button expand="full" type="submit">Guardar</ion-button>
+  </form>
+  
+</ion-content>

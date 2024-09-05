@@ -15,12 +15,12 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 
 import { environment } from '../environments/environment';
-import { ProductFormComponent } from './components/product-form/product-form.component';
 import { FormsModule } from '@angular/forms';
+import { ComponentsModule } from './components/components.module';
 
 
 @NgModule({
-  declarations: [AppComponent,ProductFormComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot({swipeBackEnabled: false}), 
@@ -30,7 +30,8 @@ import { FormsModule } from '@angular/forms';
     AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    FormsModule
+    FormsModule,
+    ComponentsModule
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient()],
   bootstrap: [AppComponent],

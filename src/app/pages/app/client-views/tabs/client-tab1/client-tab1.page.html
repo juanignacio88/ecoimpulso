@@ -12,25 +12,24 @@
     <ion-list>
       <ion-item>
         <ion-label color="primary">Reportajes</ion-label>
-        <ion-button slot="end" (click)="readItems()" [disabled]="reloadDisabled"><ion-icon name="refresh-circle" slot="icon-only"></ion-icon></ion-button>
       </ion-item>
       @if (reportajes.length == 0) {
         <ion-item color="none" lines="none"><ion-label>No hay reportajes</ion-label></ion-item>
       }@else{
-        <ion-accordion-group>
-          @for (reportaje of reportajes; track $index) {
-            <ion-accordion>
-              <ion-item slot="header" color="primary">
-                <ion-label>{{reportaje.title}}</ion-label>
-              </ion-item>
-              <div class="ion-padding" slot="content">
-                <span>fecha: {{reportaje.date.getDate() + "/" + (reportaje.date.getMonth()+1) + "/" + reportaje.date.getFullYear()}}</span>
-                <hr>
-                {{reportaje.content}}
-              </div>
-            </ion-accordion>
-          }
-        </ion-accordion-group>
+        @for (reportaje of reportajes; track $index) {
+          <ion-card>
+            <img alt="Silhouette of mountains" [src]="reportaje.imageUrl || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+            <ion-card-header>
+              <ion-card-title>
+                {{reportaje.title}}
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>{{reportaje.content}}</p>
+              <ion-button [href]="reportaje.link" target="_blank">Abrir</ion-button>
+            </ion-card-content>
+          </ion-card>
+        }
       }
       
     </ion-list>
