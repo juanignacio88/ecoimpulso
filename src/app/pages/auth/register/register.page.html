@@ -12,7 +12,7 @@
       <h1 class="ion-text-center">Registrar cuenta</h1>
       <form class="login-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
-        <ion-input class="input-background" label="Correo Electrónico" labelPlacement="stacked" type="text" fill="solid" placeholder="Ejemplo@email.com"
+        <ion-input class="input-background" label="Correo Electrónico" labelPlacement="stacked" type="text" placeholder="Ejemplo@email.com"
         formControlName="email" [class.is-invalid]="
         (registerForm.get('email')?.invalid && submitted) || 
         (registerForm.get('email')?.invalid && registerForm.get('email')?.touched)"></ion-input>
@@ -21,7 +21,7 @@
           <span class="danger">Ingrese un email válido</span>
         }
         
-        <ion-input class="input-background" label="Contraseña" id="password" labelPlacement="stacked" type="password" fill="solid" placeholder="Contraseña"
+        <ion-input class="input-background" label="Contraseña" id="password" labelPlacement="stacked" type="password" placeholder="Contraseña"
           formControlName="password" 
           [class.is-invalid]="
           (registerForm.get('password')?.invalid && submitted) || 
@@ -34,7 +34,7 @@
             <span class="danger">Ingrese una contraseña</span>
         }
 
-        <ion-input class="input-background" label="Repetir Contraseña" id="repeat-password" labelPlacement="stacked" type="password" fill="solid"
+        <ion-input class="input-background" label="Repetir Contraseña" id="repeat-password" labelPlacement="stacked" type="password"
         formControlName="repeatPassword" 
         [class.is-invalid]="
         (registerForm.get('repeatPassword')?.invalid && submitted) || 

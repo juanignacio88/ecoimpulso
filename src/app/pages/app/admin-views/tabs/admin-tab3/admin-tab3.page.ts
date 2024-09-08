@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ProductFormComponent } from 'src/app/components/product-form/product-form.component';
 import { IProducto, IUsuario } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
@@ -11,7 +12,11 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 })
 export class AdminTab3Page implements OnInit {
   public productos:IProducto[] = [];
-  constructor(private alertController: AlertController,private firebase: FirebaseService,private modalController: ModalController) { }
+  constructor(
+    private alertController: AlertController,
+    private firebase: FirebaseService,
+    private modalController: ModalController,
+    private auth:AuthService) { }
 
   ngOnInit() {
 
@@ -62,5 +67,7 @@ export class AdminTab3Page implements OnInit {
     return await modal.present();
   }
   
-
+  logOut(){
+    this.auth.confirmLogOut();
+  }
 }

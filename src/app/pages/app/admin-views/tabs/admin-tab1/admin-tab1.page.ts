@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { ReportFormComponent } from 'src/app/components/report-form/report-form.component';
 import { IReportaje } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
@@ -16,7 +17,8 @@ export class AdminTab1Page implements OnInit {
   constructor(
     private alertController: AlertController,
     private modalController: ModalController,
-    private firebase: FirebaseService) { 
+    private firebase: FirebaseService,
+    private auth:AuthService) { 
     
   }
 
@@ -65,6 +67,10 @@ export class AdminTab1Page implements OnInit {
 
   deleteItem(reportaje:IReportaje){
     this.firebase.deleteReportajeById(reportaje.rid as string);
+  }
+
+  logOut(){
+    this.auth.confirmLogOut();
   }
 
 }

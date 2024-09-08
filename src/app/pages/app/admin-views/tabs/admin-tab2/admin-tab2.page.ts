@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { IPuntoReciclaje } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { GoogleMapsService } from 'src/app/services/map/google-maps.service';
 
@@ -17,7 +18,8 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
   constructor(
     private gmapService:GoogleMapsService,
     private alertCtrl: AlertController,
-    private firebase:FirebaseService
+    private firebase:FirebaseService,
+    private auth:AuthService
   ) { 
 
   }
@@ -92,6 +94,10 @@ export class AdminTab2Page implements OnInit, AfterViewInit {
 
   resetMapView(){
     this.gmapService.removeMarker();
+  }
+
+  logOut(){
+    this.auth.confirmLogOut();
   }
 
 }

@@ -66,12 +66,12 @@
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
 
-
     --box-shadow: 0 10px 16px 2px var(--color-light);
 }
 
 ion-content{
-    --background: var(--color-background);
+    //--background: var(--color-background);
+    --background: url('./assets/img/textura_asset.jpg') no-repeat center center / cover;
 }
 
 .danger{
@@ -86,7 +86,6 @@ body{
     width: 100dvw;
     height: 100dvh;
     font-family: 'Poppins', sans-serif;
-    background-color: var(--color-background);
 }
 
 .text-center{

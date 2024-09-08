@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IProducto } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 export class ClientTab3Page implements OnInit {
 
   productos: IProducto[] = [];
-  constructor(private firebase:FirebaseService) { }
+  constructor(private firebase:FirebaseService,private auth:AuthService) { }
 
   ngOnInit() {
   }
@@ -23,6 +24,10 @@ export class ClientTab3Page implements OnInit {
     this.firebase.getProductos().subscribe((p)=>{
       this.productos = p;
     });
+  }
+
+  logOut(){
+    this.auth.confirmLogOut();
   }
 
 }

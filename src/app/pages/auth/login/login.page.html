@@ -1,10 +1,11 @@
 <ion-content [fullscreen]="true">
   <div class="container">
     <div class="form-container">
+      <img src="/assets/img/logo.png"class="logo">
       <h1 class="ion-text-center">Iniciar Sesión</h1>
       <form class="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
 
-        <ion-input class="input-background" label="Correo Electrónico" labelPlacement="stacked" type="text" fill="solid" placeholder="Ejemplo@email.com"
+        <ion-input class="input-background" label="Correo Electrónico" label-placement="stacked" type="text" placeholder="Ejemplo@email.com"
         formControlName="email" [class.is-invalid]="
         (loginForm.get('email')?.invalid && submitted) || 
         (loginForm.get('email')?.invalid && loginForm.get('email')?.touched)"></ion-input>
@@ -13,7 +14,7 @@
           <span class="danger">Ingrese un email válido</span>
         }
         
-        <ion-input class="input-background" label="Contraseña" id="password" labelPlacement="stacked" type="password" fill="solid" placeholder="Contraseña"
+        <ion-input class="input-background" label="Contraseña" id="password" labelPlacement="stacked" type="password" placeholder="Contraseña"
           formControlName="password" 
           [class.is-invalid]="
           (loginForm.get('password')?.invalid && submitted) || 

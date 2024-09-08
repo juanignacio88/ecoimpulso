@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { IPuntoReciclaje } from 'src/app/interfaces/db.interfaces';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { FirebaseService } from 'src/app/services/firebase/firebase.service';
 import { GoogleMapsService } from 'src/app/services/map/google-maps.service';
 
@@ -18,7 +19,8 @@ export class ClientTab2Page implements OnInit {
   constructor(
     private gmapService:GoogleMapsService,
     private alertCtrl: AlertController,
-    private firebase:FirebaseService
+    private firebase:FirebaseService,
+    private auth:AuthService
   ) { }
 
   ngOnInit() {
@@ -71,6 +73,10 @@ export class ClientTab2Page implements OnInit {
 
   resetMapView(){
     this.gmapService.removeMarker();
+  }
+
+  logOut(){
+    this.auth.confirmLogOut();
   }
 
 }

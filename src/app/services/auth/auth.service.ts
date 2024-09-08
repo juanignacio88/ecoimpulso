@@ -5,6 +5,8 @@ import { lastValueFrom } from 'rxjs';
 import { LocalStorageService } from '../localStorage/local-storage.service';
 import { IUsuario } from 'src/app/interfaces/db.interfaces';
 import { FirebaseError } from 'firebase/app';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,9 @@ export class AuthService {
   constructor(
     private afAuth: AngularFireAuth,
     private firestore: AngularFirestore,
-    private storage:LocalStorageService
+    private storage:LocalStorageService,
+    private alertCtrl: AlertController,
+    private router:Router
   ) {}
 
   async register(email: string, password: string, role: string) {
@@ -68,9 +72,27 @@ export class AuthService {
     });
   }
 
+  async confirmLogOut(){
+    const alert = await this.alertCtrl.create({
+      header: '¿Estás seguro de que quieres salir?',
+      buttons: [{
+        text: 'Si',
+        handler: ()=>{
+          this.logout();
+        }
+      },{
+        text: 'Cancelar',
+        role: 'cancel'
+      }]
+    });
+
+    await alert.present();
+  }
+
   async logout() {
     await this.afAuth.signOut();
     this.storage.logOut();
+    this.router.navigate(['auth','login']);
   }
 
 }

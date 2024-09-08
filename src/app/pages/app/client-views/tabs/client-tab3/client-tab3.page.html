@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-button class="mx-10" size="small" slot="start" [routerLink] = "['/auth/login']" routerDirection="root" color="light">
+    <ion-button class="mx-10" size="small" slot="start" (click)="logOut()" color="light">
       <ion-icon name="log-out" slot="icon-only"></ion-icon>
     </ion-button>
     <ion-title>Tienda</ion-title>
@@ -10,24 +10,18 @@
 <ion-content [fullscreen]="true">
 
   @if(productos.length > 0){
-    <ion-grid [fixed]="true">
-      <ion-row>
-        <ion-col class="ion-no-padding" size="6" *ngFor="let producto of productos">
-          <ion-card>
-            <img alt="Silhouette of mountains" [src]="producto.imageUrl || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
-            <ion-card-header>
-              <ion-card-title>
-                {{producto.title}}
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>${{producto.price}}</p>
-              <p>{{producto.description}}</p>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-card *ngFor="let producto of productos">
+      <img alt="Silhouette of mountains" [src]="producto.imageUrl || 'https://ionicframework.com/docs/img/demos/card-media.png'" />
+      <ion-card-header>
+        <ion-card-title>
+          {{producto.title}}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>${{producto.price}} CLP</p>
+        <p>{{producto.description}}</p>
+      </ion-card-content>
+    </ion-card>
   }@else {
     <ion-item>
       <ion-label>No hay Productos</ion-label>

@@ -4,8 +4,9 @@ ion-list{
 
 img{
     width: 100%;
-    max-height: 70px;
-    object-position: center;
+    aspect-ratio: 16/9;
+    display: block;
+    object-position: center center;
     object-fit: contain;
-    margin-top: 5px;
+    margin: auto;
 }
