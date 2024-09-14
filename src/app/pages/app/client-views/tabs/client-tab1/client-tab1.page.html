@@ -5,6 +5,20 @@
     </ion-button>
     <ion-title>Educación Ambiental</ion-title>
   </ion-toolbar>
+
+  <ion-toolbar class="toolbar-padding" color="light">
+    <ion-label>
+      <p>Filtra reportajes ingresando el titular</p>
+    </ion-label>
+    <ion-searchbar 
+      [(ngModel)]="searchTerm"
+      search-icon="search-circle" 
+      debounce="200"
+      placeholder="Busca un reportaje" 
+      (ionInput)="filterItems()"
+      show-clear-button="focus">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
@@ -12,6 +26,9 @@
     <ion-list>
       <ion-item>
         <ion-label color="primary">Reportajes</ion-label>
+        <ion-button [disabled]="reloadDisabled" (click)="readItems()" slot="end">
+          <ion-icon name="reload-outline"></ion-icon>
+        </ion-button>
       </ion-item>
       @if (reportajes.length == 0) {
         <ion-item color="none" lines="none"><ion-label>No hay reportajes</ion-label></ion-item>

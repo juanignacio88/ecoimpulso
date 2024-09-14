@@ -5,9 +5,30 @@
     </ion-button>
     <ion-title>Tienda</ion-title>
   </ion-toolbar>
+
+  <ion-toolbar class="toolbar-padding" color="light">
+    <ion-label>
+      <p>Filtra productos ingresando el nombre</p>
+    </ion-label>
+    <ion-searchbar 
+      [(ngModel)]="searchTerm"
+      search-icon="search-circle" 
+      debounce="200"
+      placeholder="Busca un producto" 
+      (ionInput)="filterItems()"
+      show-clear-button="focus">
+    </ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+
+  <ion-item class="ion-margin-top" lines="none">
+    <ion-label color="primary">Productos</ion-label>
+    <ion-button [disabled]="reloadDisabled" (click)="readItems()" slot="end">
+      <ion-icon name="reload-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
 
   @if(productos.length > 0){
     <ion-card *ngFor="let producto of productos">
@@ -23,7 +44,7 @@
       </ion-card-content>
     </ion-card>
   }@else {
-    <ion-item>
+    <ion-item class="ion-margin-top" lines="none">
       <ion-label>No hay Productos</ion-label>
     </ion-item>
   }

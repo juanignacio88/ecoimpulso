@@ -24,3 +24,11 @@ img{
     object-fit: contain;
     margin: auto;
 }
+
+.ios ion-searchbar, .ios ion-item-divider ion-label{
+    padding: 8px 12px;
+}
+
+.toolbar-padding{
+    padding: 5px;
+}
