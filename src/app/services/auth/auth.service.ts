@@ -89,6 +89,10 @@ export class AuthService {
     await alert.present();
   }
 
+  async sendResetPasswordLink(email:string){
+    this.afAuth.sendPasswordResetEmail(email.toLowerCase());
+  }
+
   async logout() {
     await this.afAuth.signOut();
     this.storage.logOut();

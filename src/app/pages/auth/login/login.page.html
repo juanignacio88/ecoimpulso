@@ -26,8 +26,9 @@
         @if ((loginForm.get('password')?.invalid && submitted) || loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
             <span class="danger">Ingrese una contraseña</span>
         }
+        <a [routerLink]="['/auth/reset-password']" color="secondary">Recuperar Contraseña</a>
         <ion-button color="primary" type="submit">Entrar</ion-button>
-        <ion-button [routerLink] = "['/auth/register']" class="ion-text-center" color="dark" fill="clear">Registrar cuenta</ion-button>
+        <ion-button [routerLink]="['/auth/register']" class="ion-text-center" color="dark" fill="clear">Registrar cuenta</ion-button>
       </form>
     </div>
   </div>

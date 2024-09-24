@@ -18,6 +18,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/auth/register/register.module').then( m => m.RegisterPageModule)
   },
   {
+    path: 'auth/reset-password',
+    loadChildren: () => import('./pages/auth/reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
+  },
+  {
     path: 'admin',
     loadChildren: () => import('./pages/app/admin-views/admin-tabs/admin-tabs.module').then(m => m.AdminTabsPageModule),
     canActivate: [adminUserGuard]
@@ -26,7 +30,7 @@ const routes: Routes = [
     path: 'client',
     loadChildren: () => import('./pages/app/client-views/client-tabs/client-tabs.module').then(m => m.ClientTabsPageModule),
     canActivate: [clientUserGuard]
-  }
+  },
 ];
 @NgModule({
   imports: [

@@ -43,12 +43,12 @@
         </ion-input>
 
 
-      @if ((registerForm.get('repeatPassword')?.invalid && submitted) 
-            || registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched
-            || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && registerForm.get('repeatPassword')?.touched)
-            || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && submitted)) {
-          <span class="danger">Las contraseñas no son iguales</span>
-      }
+        @if ((registerForm.get('repeatPassword')?.invalid && submitted) 
+              || registerForm.get('repeatPassword')?.invalid && registerForm.get('repeatPassword')?.touched
+              || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && registerForm.get('repeatPassword')?.touched)
+              || (registerForm.get('repeatPassword')?.value != registerForm.get('password')?.value && submitted)) {
+            <span class="danger">Las contraseñas no son iguales</span>
+        }
 
         <ion-button color="primary" type="submit">Registrar</ion-button>
       </form>
